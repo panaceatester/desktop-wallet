@@ -165,6 +165,8 @@
         }
         // Set the balance with the default fees while updating it with the real fees
         setBalance(accountService.defaultFees.send)
+
+        // TODO feeService
         accountService.getFees(true).then(fees => {
           if (fees.send !== accountService.defaultFees.send) {
             setBalance(fees.send)

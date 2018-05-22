@@ -7,6 +7,7 @@
   function TransactionBuilderService ($timeout, $q, networkService, accountService, ledgerService, gettextCatalog, utilityService) {
     const ark = require(require('path').resolve(__dirname, '../node_modules/arkjs'))
 
+    // TODO refactor fee
     function createTransaction (deferred, config, fee, createTransactionFunc, setAdditionalTransactionPropsOnLedger) {
       let transaction
       try {
@@ -50,6 +51,7 @@
     function prepareTransaction (config, prepareFunc) {
       const deferred = $q.defer()
       const account = accountService.getAccount(config.fromAddress)
+      // TODO
       accountService.getFees(false).then((fees) => {
         prepareFunc(deferred, account, fees)
       })
@@ -70,14 +72,14 @@
 
         createTransaction(deferred,
                           config,
-                          fees.send,
+                          config.fee,
                           () => ark.transaction.createTransaction(config.toAddress,
                                                                   config.amount,
                                                                   config.smartbridge,
                                                                   config.masterpassphrase,
                                                                   config.secondpassphrase,
                                                                   undefined,
-                                                                  fees.send))
+                                                                  config.fee))
       })
     }
 
