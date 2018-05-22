@@ -2,7 +2,7 @@
   'use strict'
 
   angular.module('arkclient.services')
-    .service('transactionSenderService', ['$timeout', 'gettextCatalog', 'gettext', 'dialogService', 'utilityService', 'accountService', 'storageService', 'toastService', 'neoApiService', 'transactionBuilderService', 'transactionValidatorService', TransactionSenderService])
+    .service('transactionSenderService', ['$timeout', 'gettextCatalog', 'gettext', 'dialogService', 'utilityService', 'accountService', 'storageService', 'toastService', 'neoApiService', 'transactionBuilderService', 'transactionValidatorService', 'feeService', TransactionSenderService])
 
   /**
    * TransactionSenderService
@@ -13,7 +13,7 @@
    *
    * TODO check the passphrase before moving to the next step
    */
-  function TransactionSenderService ($timeout, gettextCatalog, gettext, dialogService, utilityService, accountService, storageService, toastService, neoApiService, transactionBuilderService, transactionValidator) {
+  function TransactionSenderService ($timeout, gettextCatalog, gettext, dialogService, utilityService, accountService, storageService, toastService, neoApiService, transactionBuilderService, transactionValidator, feeService) {
     /**
      * Show the send transaction dialog. Reuses the controller and its $scope
      * TODO because currently it depends on the original implementation of AccountController too
@@ -86,6 +86,7 @@
         if (uriScheme) {
           data.amount = uriScheme.amount
           data.smartbridge = uriScheme.vendorField
+          // TODO fee ?
         }
 
         if ($scope.data.secondPassphrase) {
@@ -98,8 +99,12 @@
           data.toAddress = $scope.data.toAddress.trim()
           data.amount = Number(utilityService.arkToArktoshi(parseFloat($scope.data.amount), 0))
           data.smartbridge = $scope.data.smartbridge
+          // TODO ensure max / min ?
+          data.fee = Number(utilityService.arkToArktoshi(parseFloat($scope.data.fee), 0))
 
           prepareTransaction(selectedAccount, data)
+
+        // TODO fee
         } else if (tab === 'multiple') {
           parseTransactionsFile($scope.data.file, transactionsData => {
             data.transactions = processTransactionsData(transactionsData)
@@ -111,6 +116,15 @@
         }
       }
 
+      $scope.fees = {
+        step: 0.00000001,
+        min: 0.00000001,
+        max: 0.1
+      }
+
+      // TODO type
+      const fee = Number(utilityService.arktoshiToArk(feeService.byType(0).avg, 0))
+
       $scope.tab = 'single'
       $scope.data = {
         ledger: selectedAccount.ledger,
@@ -118,7 +132,8 @@
         fromLabel: selectedAccount ? selectedAccount.username : null,
         secondSignature: selectedAccount ? selectedAccount.secondSignature : '',
         passphrase: '',
-        secondPassphrase: ''
+        secondPassphrase: '',
+        fee
       }
       $scope.totalBalance = getTotalBalance(0)
       $scope.remainingBalance = getTotalBalance(0) // <-- initial value, this will change by directive

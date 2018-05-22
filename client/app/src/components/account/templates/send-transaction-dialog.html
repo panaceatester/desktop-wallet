@@ -93,18 +93,26 @@
           <!-- TODO tab -->
           <!-- TODO tab -->
 
-          <md-slider-container class="md-block" style="width: 100%">
+          <md-input-container class="md-block" style="width: 100%">
             <label>{{'Fee'|translate}} ({{network.token}})</label>
-            <md-slider ng-model="color.blue" min="0" max="255" aria-label="Fee" id="fee-slider" class="md-primary">
+            <!-- <input type="number" ng&#45;model="data.fee" aria&#45;label="Fee"> -->
+            <!-- TODO valid amount -->
+            <input style="width: 100%" ng-model="data.fee" type="number" step="{{ fees.step }}" min="{{ fees.min }}" max="{{ fees.max }}" valid-amount autocomplete="off" ng-required="true" tabIndex="2" aria-label="Fee" aria-controls="fee-slider">
+
+            <!-- TODO -->
+            <div class="hint">
+              {{ac.currency.symbol}} {{data.fee | amountToCurrency:this}}
+            </div>
+          </md-input-container>
+        </div>
+
+        <div layout="row" layout-align="space-between start">
+          <md-slider-container class="md-block" style="width: 100%">
+
+            <!-- TODO colour of the tooltip -->
+            <!-- NOTE: mdSlider only supports 6 decimals (https://material.angularjs.org/latest/api/directive/mdSlider) -->
+            <md-slider ng-model="data.fee" md-discrete round="6" step="{{ fees.step * 100 }}" min="{{ fees.min * 100 }}" max="{{ fees.max }}" aria-label="Fee" id="fee-slider" class="md-primary">
             </md-slider>
-            <md-input-container>
-              <!-- <input type="number" ng&#45;model="data.fee" aria&#45;label="Fee"> -->
-              <!-- TODO valid amount -->
-              <input style="width: 100%" ng-model="data.fee" type="number" step="0.00000001" min="0.00000001" max="100000000000000" valid-amount autocomplete="off" ng-required="true" tabIndex="2" aria-label="Fee" aria-controls="fee-slider">
-              <div class="hint">
-                {{ac.currency.symbol}} {{data.fee | amountToCurrency:this}}
-              </div>
-            </md-input-container>
           </md-slider-container>
 
           <!-- <md&#45;input&#45;container class="md&#45;block" style="width: 100%"> -->
@@ -115,11 +123,11 @@
           <!--   </div> -->
           <!-- </md&#45;input&#45;container> -->
 
-          <md-input-container class="md-block">
-            <md-button ng-click="fillSendableBalance()" class="md-primary">
-              <translate>Recommended</translate>
-            </md-button>
-          </md-input-container>
+          <!-- <md&#45;input&#45;container class="md&#45;block"> -->
+          <!--   <md&#45;button ng&#45;click="fillSendableBalance()" class="md&#45;primary"> -->
+          <!--     <translate>Recommended</translate> -->
+          <!--   </md&#45;button> -->
+          <!-- </md&#45;input&#45;container> -->
         </div>
 
         <md-input-container md-no-float class="md-block">
