@@ -63,21 +63,31 @@
           return
         }
 
-        if (config.amount + fees.send > account.balance) {
+        if (config.fee > fees.send.maxFee) {
+          deferred.reject(gettextCatalog.getString('The fee chosen is greater than the maximum required!'))
+          return
+        }
+
+        if (config.fee < fees.send.minFee) {
+          deferred.reject(gettextCatalog.getString('The fee chosen is less than the minimum required!'))
+          return
+        }
+
+        if (config.amount + config.fee > account.balance) {
           deferred.reject(gettextCatalog.getString('Not enough {{ currency }} on your account \'{{ address }}\'!', {currency: networkService.getNetwork().token, address: config.fromAddress}))
           return
         }
 
         createTransaction(deferred,
                           config,
-                          fees.send,
+                          config.fee,
                           () => ark.transaction.createTransaction(config.toAddress,
                                                                   config.amount,
                                                                   config.smartbridge,
                                                                   config.masterpassphrase,
                                                                   config.secondpassphrase,
                                                                   undefined,
-                                                                  fees.send))
+                                                                  config.fee))
       })
     }
 
@@ -155,13 +165,23 @@
 
     function createSecondPassphraseCreationTransaction (config) {
       return prepareTransaction(config, (deferred, account, fees) => {
-        if (account.balance < fees.secondsignature) {
+        if (config.fee > fees.secondsignature.maxFee) {
+          deferred.reject(gettextCatalog.getString('The fee chosen is greater than the maximum required!'))
+          return
+        }
+
+        if (config.fee < fees.secondsignature.minFee) {
+          deferred.reject(gettextCatalog.getString('The fee chosen is less than the minimum required!'))
+          return
+        }
+
+        if (account.balance < config.fee) {
           deferred.reject(gettextCatalog.getString(
               'Not enough {{ currency }} on your account \'{{ address }}\' you need at least {{ amount }} to create a second passphrase!',
               {
                 currency: networkService.getNetwork().token,
                 address: config.fromAddress,
-                amount: arktoshiToArk(fees.secondsignature)
+                amount: arktoshiToArk(config.fee)
               }
           ))
           return
@@ -169,20 +189,30 @@
 
         createTransaction(deferred,
                           config,
-                          fees.secondsignature,
-                          () => ark.signature.createSignature(config.masterpassphrase, config.secondpassphrase, fees.secondsignature))
+                          config.fee,
+                          () => ark.signature.createSignature(config.masterpassphrase, config.secondpassphrase, config.fee))
       })
     }
 
     function createDelegateCreationTransaction (config) {
       return prepareTransaction(config, (deferred, account, fees) => {
-        if (account.balance < fees.delegate) {
+        if (config.fee > fees.delegate.maxFee) {
+          deferred.reject(gettextCatalog.getString('The fee chosen is greater than the maximum required!'))
+          return
+        }
+
+        if (config.fee < fees.delegate.minFee) {
+          deferred.reject(gettextCatalog.getString('The fee chosen is less than the minimum required!'))
+          return
+        }
+
+        if (account.balance < config.fee) {
           deferred.reject(gettextCatalog.getString(
             'Not enough {{ currency }} on your account \'{{ address }}\' you need at least {{ amount }} to register delegate!',
             {
               currency: networkService.getNetwork().token,
               address: config.fromAddress,
-              amount: arktoshiToArk(fees.delegate)
+              amount: arktoshiToArk(config.fee)
             }
           ))
           return
@@ -190,20 +220,30 @@
 
         createTransaction(deferred,
                           config,
-                          fees.delegate,
-                          () => ark.delegate.createDelegate(config.masterpassphrase, config.username, config.secondpassphrase, fees.delegate))
+                          config.fee,
+                          () => ark.delegate.createDelegate(config.masterpassphrase, config.username, config.secondpassphrase, config.fee))
       })
     }
 
     function createVoteTransaction (config) {
       return prepareTransaction(config, (deferred, account, fees) => {
-        if (account.balance < fees.vote) {
+        if (config.fee > fees.vote.maxFee) {
+          deferred.reject(gettextCatalog.getString('The fee chosen is greater than the maximum required!'))
+          return
+        }
+
+        if (config.fee < fees.vote.minFee) {
+          deferred.reject(gettextCatalog.getString('The fee chosen is less than the minimum required!'))
+          return
+        }
+
+        if (account.balance < config.fee) {
           deferred.reject(gettextCatalog.getString(
             'Not enough {{ currency }} on your account \'{{ address }}\' you need at least {{ amount }} to vote!',
             {
               currency: networkService.getNetwork().token,
               address: config.fromAddress,
-              amount: arktoshiToArk(fees.vote)
+              amount: arktoshiToArk(config.fee)
             }
           ))
           return
@@ -211,8 +251,8 @@
 
         createTransaction(deferred,
                           config,
-                          fees.vote,
-                          () => ark.vote.createVote(config.masterpassphrase, config.publicKeys.split(','), config.secondpassphrase, fees.vote),
+                          config.fee,
+                          () => ark.vote.createVote(config.masterpassphrase, config.publicKeys.split(','), config.secondpassphrase, config.fee),
                           (transaction) => { transaction.recipientId = config.fromAddress })
       })
     }

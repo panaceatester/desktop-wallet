@@ -1533,33 +1533,34 @@
         )
       }
 
-      function warnAboutSecondPassphraseFee () {
-        accountService.getFees(true).then((fees) => {
-          const secondPhraseArktoshiVal = fees['secondsignature']
-          const secondPhraseArkVal = utilityService.arktoshiToArk(secondPhraseArktoshiVal, true)
-          const confirm = $mdDialog.confirm({
-            title: gettextCatalog.getString('Second Passphrase fee ({{ currency }})', {currency: networkService.getNetwork().symbol}),
-            secondPhraseArkVal: secondPhraseArkVal,
-            textContent: gettextCatalog.getString('WARNING! Second passphrase creation costs {{ cost }} {{ currency }}',
-                                                  {cost: secondPhraseArkVal, currency: networkService.getNetwork().token}),
-            ok: gettextCatalog.getString('Continue'),
-            cancel: gettextCatalog.getString('Cancel')
-          })
+      // DEPRECATED on v2
+      // function warnAboutSecondPassphraseFee () {
+      //   accountService.getFees(true).then((fees) => {
+      //     const secondPhraseArktoshiVal = fees['secondsignature']
+      //     const secondPhraseArkVal = utilityService.arktoshiToArk(secondPhraseArktoshiVal, true)
+      //     const confirm = $mdDialog.confirm({
+      //       title: gettextCatalog.getString('Second Passphrase fee ({{ currency }})', {currency: networkService.getNetwork().symbol}),
+      //       secondPhraseArkVal: secondPhraseArkVal,
+      //       textContent: gettextCatalog.getString('WARNING! Second passphrase creation costs {{ cost }} {{ currency }}',
+      //                                             {cost: secondPhraseArkVal, currency: networkService.getNetwork().token}),
+      //       ok: gettextCatalog.getString('Continue'),
+      //       cancel: gettextCatalog.getString('Cancel')
+      //     })
 
-          $mdDialog.show(confirm)
-            .then(() => {
-              $mdDialog.show({
-                parent: angular.element(document.getElementById('app')),
-                templateUrl: './src/accounts/view/createSecondPassphrase.html',
-                clickOutsideToClose: false,
-                preserveScope: true,
-                scope: $scope
-              })
-            }, () => cancel())
-        })
-      }
+      //     $mdDialog.show(confirm)
+      //       .then(() => {
+      //         $mdDialog.show({
+      //           parent: angular.element(document.getElementById('app')),
+      //           templateUrl: './src/accounts/view/createSecondPassphrase.html',
+      //           clickOutsideToClose: false,
+      //           preserveScope: true,
+      //           scope: $scope
+      //         })
+      //       }, () => cancel())
+      //   })
+      // }
 
-      warnAboutSecondPassphraseFee()
+      // warnAboutSecondPassphraseFee()
 
       function next () {
         if (!$scope.createSecondPassphraseDialog.data.showRepassphrase) {

@@ -17,11 +17,23 @@
     const ark = require(require('path').resolve(__dirname, '../node_modules/arkjs'))
 
     self.defaultFees = {
-      'send': 10000000,
-      'vote': 100000000,
-      'secondsignature': 500000000,
-      'delegate': 2500000000,
-      'multisignature': 500000000
+      'send': {
+        'maxFee': 10000000,
+        'minFee': 10000000
+      },
+      'secondsignature': {
+        'maxFee': 500000000,
+        'minFee': 500000000
+      },
+      'delegate': {
+        'maxFee': 2500000000,
+        'minFee': 2500000000
+      },
+      'vote': {
+        'maxFee': 100000000,
+        'minFee': 100000000
+      },
+      'multisignature': null
     }
 
     self.cachedFees = null
@@ -231,25 +243,53 @@
     }
 
     function getFees (canUseCached) {
+      const txMap = {
+        0: 'send',
+        1: 'vote',
+        2: 'secondsignature',
+        3: 'delegate',
+        4: 'multisignature'
+      }
       const deferred = $q.defer()
+
       if (canUseCached && self.cachedFees) {
         deferred.resolve(self.cachedFees)
-        return deferred.promise
       }
 
-      networkService.getFromPeer('/api/blocks/getFees')
+      networkService.getFromPeer('/api/loader/autoconfigure')
         .then((resp) => {
           if (resp.success) {
-            self.cachedFees = resp.fees
-            deferred.resolve(resp.fees)
+            for (let fee of resp.feeStatistics) {
+              const { type, ...statistics } = fee
+              self.cachedFees[txMap[type]] = statistics
+            }
+            deferred.resolve(self.cachedFees)
           } else {
             deferred.resolve(self.defaultFees)
           }
-        },
-          () => deferred.resolve(self.defaultFees))
-
-      return deferred.promise
+        }, () => deferred.resolve(self.defaultFees))
     }
+
+    // function getFees (canUseCached) {
+    //   const deferred = $q.defer()
+    //   if (canUseCached && self.cachedFees) {
+    //     deferred.resolve(self.cachedFees)
+    //     return deferred.promise
+    //   }
+
+    //   networkService.getFromPeer('/api/blocks/getFees')
+    //     .then((resp) => {
+    //       if (resp.success) {
+    //         self.cachedFees = resp.fees
+    //         deferred.resolve(resp.fees)
+    //       } else {
+    //         deferred.resolve(self.defaultFees)
+    //       }
+    //     },
+    //       () => deferred.resolve(self.defaultFees))
+
+    //   return deferred.promise
+    // }
 
     function getTransactions (address, offset, limit, store) {
       if (!offset) {
