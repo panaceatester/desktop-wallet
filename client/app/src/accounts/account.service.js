@@ -260,8 +260,8 @@
         .then((resp) => {
           if (resp.success) {
             for (let fee of resp.feeStatistics) {
-              const { type, ...statistics } = fee
-              self.cachedFees[txMap[type]] = statistics
+              const { type, maxFee, minFee } = fee
+              self.cachedFees[txMap[type]] = { maxFee, minFee }
             }
             deferred.resolve(self.cachedFees)
           } else {
