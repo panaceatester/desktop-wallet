@@ -52,70 +52,58 @@
                                md-autofocus="true"
                                ng-attr-md-floating-label="{{'Type an address or a name'|translate}}"
                                ng-blur="onAddressFieldBlur()">
-            <md-item-template>
-              <span class="item-title">
-                      <md-icon md-font-library="material-icons">
-                        {{contact.icon}}
-                        <md-tooltip>
-                            {{contact.type | translate}}
-                        </md-tooltip>
-                      </md-icon>
-                      <span ng-if="contact.name"> {{contact.name}} -</span>
-                      <span>{{contact.address}}</span>
-              </span>
-            </md-item-template>
-          </md-autocomplete>
-        </div>
-
-        <div layout="row" flex layout-align="start center" ng-if="receiverValidation.failType">
-          <md-icon flex="5" md-font-library="material-icons">{{receiverValidation.failType}}</md-icon>
-          <div flex="95">{{receiverValidation.message}}</div>
-        </div>
-
-        <div layout="row" layout-align="space-between start">
-          <md-input-container class="md-block" style="width: 100%">
-            <label>{{'Amount'|translate}} ({{network.token}})</label>
-            <input style="width: 100%" ng-model="data.amount" type="number" step="0.00000001" min="0.00000001" max="100000000000000" valid-amount autocomplete="off" ng-required="true" tabIndex="2">
-            <div class="hint">
-              {{ac.currency.symbol}} {{data.amount | amountToCurrency:this}}
+                <md-item-template>
+                  <span class="item-title">
+                          <md-icon md-font-library="material-icons">
+                            {{contact.icon}}
+                            <md-tooltip>
+                                {{contact.type | translate}}
+                            </md-tooltip>
+                          </md-icon>
+                          <span ng-if="contact.name"> {{contact.name}} -</span>
+                          <span>{{contact.address}}</span>
+                  </span>
+                </md-item-template>
+              </md-autocomplete>
             </div>
-          </md-input-container>
 
-          <md-input-container class="md-block">
-                <md-button ng-click="fillSendableBalance()" class="md-primary">
-              <translate>Send All</translate>
-            </md-button>
-          </md-input-container>
-        </div>
-
-        <div layout="row" layout-align="space-between start">
-          <!-- TODO tab -->
-
-          <md-input-container class="md-block" style="width: 100%">
-            <label>{{'Fee'|translate}} ({{network.token}})</label>
-            <!-- TODO valid amount -->
-            <input style="width: 100%" ng-model="data.fee" type="number" step="{{ fees.step }}" min="{{ fees.min }}" max="{{ fees.max }}" valid-amount autocomplete="off" ng-required="true" tabIndex="2" aria-label="{{'Fee'|translate}}" aria-controls="fee-slider">
-
-            <div class="hint">
-              {{ac.currency.symbol}} {{data.fee | amountToCurrency:this}}
+            <div layout="row" flex layout-align="start center" ng-if="receiverValidation.failType">
+              <md-icon flex="5" md-font-library="material-icons">{{receiverValidation.failType}}</md-icon>
+              <div flex="95">{{receiverValidation.message}}</div>
             </div>
-          </md-input-container>
-        </div>
 
-        <div layout="row" layout-align="space-between start">
-          <!-- TODO min &#45; max -->
-          <md-slider-container class="md-block" style="width: 100%">
-            <!-- TODO colour of the tooltip -->
-            <!-- NOTE: mdSlider only supports 6 decimals (https://material.angularjs.org/latest/api/directive/mdSlider) -->
-            <md-slider ng-model="data.fee" md-discrete round="6" step="{{ fees.step * 100 }}" min="{{ fees.min * 100 }}" max="{{ fees.max }}" aria-label="{{'Fee'|translate}}" id="fee-slider" class="md-primary">
-            </md-slider>
-          </md-slider-container>
-        </div>
+            <div layout="row" layout-align="space-between start">
+              <md-input-container class="md-block" style="width: 100%">
+                <label>{{'Amount'|translate}} ({{network.token}})</label>
+                <input style="width: 100%" ng-model="data.amount" type="number" step="0.00000001" min="0.00000001" max="100000000000000" valid-amount autocomplete="off" ng-required="true" tabIndex="2">
+                <div class="hint">
+                  {{ac.currency.symbol}} {{data.amount | amountToCurrency:this}}
+                </div>
+              </md-input-container>
 
-        <md-input-container md-no-float class="md-block">
-              <label>{{'Smartbridge or message'|translate}} ({{'Optional'|translate}})</label>
-              <input ng-model="data.smartbridge" type="text" ng-required="false" maxlength="64" tabIndex="3">
-        </md-input-container>
+              <md-input-container class="md-block">
+                    <md-button ng-click="fillSendableBalance()" class="md-primary">
+                  <translate>Send All</translate>
+                </md-button>
+              </md-input-container>
+            </div>
+
+            <div layout="row" layout-align="space-between start">
+              <md-slider-container class="md-block" style="width: 100%">
+                <span>{{'Fee'|translate}}</span>
+                <!-- NOTE: mdSlider only supports 6 decimals (https://material.angularjs.org/latest/api/directive/mdSlider) -->
+                <md-slider ng-model="data.fee" round="6" step="{{ fees.step }}" min="{{ fees.min }}" max="{{ fees.max }}" aria-label="{{'Fee'|translate}}" class="md-primary">
+                </md-slider>
+                <md-input-container>
+                  <input ng-model="data.fee" type="number" step="{{ fees.step }}" min="{{ fees.min }}" max="{{ fees.max }}" valid-amount autocomplete="off" ng-required="true" tabIndex="2" aria-label="{{'Fee'|translate}}" aria-controls="fee-slider">
+                </md-input-container>
+              </md-slider-container>
+            </div>
+
+            <md-input-container md-no-float class="md-block">
+                  <label>{{'Smartbridge or message'|translate}} ({{'Optional'|translate}})</label>
+                  <input ng-model="data.smartbridge" type="text" ng-required="false" maxlength="64" tabIndex="3">
+            </md-input-container>
 
             <passphrase-field ng-if="!data.ledger" ng-model="data.passphrase" label="{{'Passphrase' | translate}}" tab-index="4"></passphrase-field>
             <passphrase-field ng-if="data.secondSignature"ng-model="data.secondPassphrase" label="{{'Second Passphrase' | translate}}" tab-index="5"></passphrase-field>
