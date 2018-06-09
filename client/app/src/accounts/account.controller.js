@@ -236,6 +236,7 @@
 
     self.refreshAccountsAutomatically = storageService.get('refreshAccountsAutomatically') || false
     self.playFundsReceivedSound = storageService.get('playFundsReceivedSound') || false
+    self.editFeesManually = storageService.get('editFeesManually') || false
     self.togglePlayFundsReceivedSound = togglePlayFundsReceivedSound
     self.manageBackgrounds = manageBackgrounds
     self.showExchangeRate = showExchangeRate
@@ -715,6 +716,10 @@
           transactionsState.isFinished = true
           self.accountRefreshState.updateRefreshState(showToast ? toastService : null)
         })
+    }
+
+    self.toggleEditFeesManually = function () {
+      storageService.set('editFeesManually', self.editFeesManually, true)
     }
 
     self.toggleRefreshAccountsAutomatically = function () {

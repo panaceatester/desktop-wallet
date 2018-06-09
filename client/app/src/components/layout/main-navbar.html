@@ -69,16 +69,21 @@
 							<md-icon>autorenew</md-icon>
 							<p translate>Refresh accounts automatically?</p>
 							<md-switch ng-model="$ctrl.ul.refreshAccountsAutomatically" class="md-primary" md-no-ink aria-label="Refresh accounts automatically?" ng-change="$ctrl.ul.toggleRefreshAccountsAutomatically()" ng-init="$ctrl.ul.toggleRefreshAccountsAutomatically()"></md-switch>
+            </md-list-item>
+            <md-list-item aria-label="Refresh accounts automatically?">
+							<md-icon>create</md-icon>
+							<p translate>Edit fees manually?</p>
+							<md-switch ng-model="$ctrl.ul.editFeesManually" class="md-primary" md-no-ink aria-label="Edit fees manually?" ng-change="$ctrl.ul.toggleEditFeesManually()" ng-init="$ctrl.ul.toggleEditFeesManually()"></md-switch>
 						</md-list-item>
 						<hr>
-						<md-list-item aria-label="Import Account" ng-click="$ctrl.ul.importAccount()">
+						<!-- <md-list-item aria-label="Import Account" ng-click="$ctrl.ul.importAccount()">
 							<md-icon>file_download</md-icon>
 							<p translate>Import Account</p>
 						</md-list-item>
 						<md-list-item aria-label="Create Account" ng-click="$ctrl.ul.createAccount()">
 							<md-icon>account_box</md-icon>
 							<p translate>Create Account</p>
-						</md-list-item>
+						</md-list-item> -->
 						<md-list-item aria-label="Add Contact" ng-controller="AddressbookController as ab" ng-click="ab.addAddressbookContact()">
 							<md-icon md-font-library="material-icons">library_add</md-icon>
 							<p translate>Add Contact</p>
