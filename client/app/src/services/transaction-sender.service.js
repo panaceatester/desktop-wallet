@@ -18,7 +18,7 @@
      * Show the send transaction dialog. Reuses the controller and its $scope
      * TODO because currently it depends on the original implementation of AccountController too
      */
-    const openDialogIn = ($scope, accountCtrl, selectedAccount, uriScheme) => {
+    const openDialogIn = async ($scope, accountCtrl, selectedAccount, uriScheme) => {
       $scope.maxTransactionsPerFile = 10
 
       const getTotalBalance = fee => {
@@ -116,14 +116,10 @@
         }
       }
 
-      $scope.fees = {
-        step: 0.00000001,
-        min: 0.00000001,
-        max: 0.1
-      }
+      const feeStatistics = await feeService.byType(0)
 
-      // TODO type
-      const fee = Number(utilityService.arktoshiToArk(feeService.byType(0).avg, 0))
+      $scope.fees = feeStatistics
+      const fee = Number(utilityService.arktoshiToArk(feeStatistics.avg, 0))
 
       $scope.tab = 'single'
       $scope.data = {

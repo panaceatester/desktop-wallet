@@ -92,10 +92,10 @@
               <md-slider-container class="md-block" style="width: 100%">
                 <span>{{'Fee'|translate}}</span>
                 <!-- NOTE: mdSlider only supports 6 decimals (https://material.angularjs.org/latest/api/directive/mdSlider) -->
-                <md-slider ng-model="data.fee" round="6" step="{{ fees.step }}" min="{{ fees.min }}" max="{{ fees.max }}" aria-label="{{'Fee'|translate}}" class="md-primary">
+                <md-slider ng-model="data.fee" round="6" step="0.000001" min="{{ fees.min }}" max="{{ fees.max }}" aria-label="{{'Fee'|translate}}" class="md-primary">
                 </md-slider>
                 <md-input-container>
-                  <input ng-model="data.fee" type="number" step="{{ fees.step }}" min="{{ fees.min }}" max="{{ fees.max }}" valid-amount autocomplete="off" ng-required="true" tabIndex="2" aria-label="{{'Fee'|translate}}" aria-controls="fee-slider">
+                  <input ng-model="data.fee" type="number" step="0.000001" min="{{ fees.min }}" max="{{ fees.max }}" valid-amount autocomplete="off" ng-required="true" tabIndex="2" aria-label="{{'Fee'|translate}}" aria-controls="fee-slider">
                 </md-input-container>
               </md-slider-container>
             </div>
